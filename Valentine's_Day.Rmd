@@ -1,0 +1,90 @@
+---
+title: "What did you get for Valentine's Day?"
+output: html_document
+date: "2025-03-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include = FALSE}
+library(tidyverse)
+library(dplyr)
+library(tidytuesdayR)
+library(rmarkdown)
+library(ggthemes)
+library(ggplot2)
+```
+
+```{r, include = FALSE}
+tuesdata <- tidytuesdayR::tt_load('2024-02-13')
+gifts_age <- tuesdata$gifts_age
+write_csv(gifts_age, "gifts_age.csv")
+gifts_age <- read_csv("gifts_age.csv")
+View(gifts_age)
+```
+
+As the month of February approaches, love begins to float in the air. Love ones begin to prepare to show their appreciation for one another and often do this through gifts. The National Retail Federation in the United States conducted a study on how consumers celebrate Valentine's Day. The data used for this analysis showcases different age groups and what they would typically purchase as a gift for Valentine's day.
+
+```{r}
+#This creates the "Who Celebrates Valentine's Day" chart.
+ggplot(
+  data = gifts_age, 
+  aes(x = Age, 
+      y = SpendingCelebrating)) +
+  geom_col(fill = "pink") +
+  labs(
+    title = "Who Celebrates Valentine's Day?",
+    x = "Age",
+    y = "Percent Celebrating"
+  )
+```
+
+This bar chart shows the percent of people celebrating Valentine's day from 2010 to 2022 by age group. Based on this data, there is not a group where everyone celebrates. However, the age group, 18-24, celebrates Valentine's Day the most and it decreases as the groups get older. This bar chart is a great visualization for viewers to see the drastic change amongst the groups. The reason for this change can be due to a myriad of reasons. When individuals are younger they're more passionate to celebrate their love ones or as an individual gets older they celebrate their love ones so much that they don't limit it to just one day. The reason why a certain percent is celebrating has so many reasons that can't be limited to one.
+
+In this next section, we will view what these groups who celebrated Valentine's Day decided to purchase.
+
+```{r, echo = FALSE}
+gifts_long <- pivot_longer(
+  data = gifts_age,
+  cols = Candy:GiftCards,
+  names_to = "GiftType",
+  values_to = "AvgSpent"
+)
+
+```
+
+```{r}
+#This creates the "Purchases for Valentine's Day" chart.
+ggplot(
+  data = gifts_long, 
+  aes(x = Age, 
+      y = AvgSpent, 
+      fill = GiftType)) +
+  geom_col(position = "fill") +
+  scale_color_colorblind() +
+  theme_minimal()+
+  labs(
+    title = "Purchases for Valentine's Day",
+    x = "Age",
+    y = "Gifts Purchased",
+    fill = "Gift Type"
+  )
+```
+
+This stacked bar chart shows the average percent spent on the listed gifts by age group. The data is presented as a proportion of total purchases per age group, meaning each bar sums to 100%.
+
+#### Key Observations:
+
+-   Amongst all age groups, candy is the most purchased gift.
+-   Gift cards are the least purchased gift.
+-   Jewelry is more commonly purchased by the younger age groups, but decreases throughout age groups.
+
+These findings provide insight in consumer purchases on Valentine's Day, showing that certain gifts like candy are more valued over gift cards. This information can be useful for business' taking part in Valentine's Day retail. It allows them to know what gift types to prioritize to bring in the most sales to their business.
+
+```{r, echo=FALSE}
+
+```
+
+You can visit [GitHub Valentine's Day Consumer Data](https://github.com/rfordatascience/tidytuesday/tree/main/data/2024/2024-02-13) for more information.
